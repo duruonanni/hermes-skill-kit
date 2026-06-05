@@ -13,7 +13,7 @@ Usage:
     python3 create_doc.py "文档标题" [user_open_id]
 
 Requires:
-    FEISHU_APP_ID and FEISHU_APP_SECRET in ~/.hermes/.env
+    FEISHU_APP_ID and FEISHU_APP_SECRET in .env
 """
 
 import json, os, sys, time, urllib.request
@@ -35,7 +35,7 @@ def read_env(key):
 APP_ID = read_env('FEISHU_APP_ID')
 APP_SECRET = read_env('FEISHU_APP_SECRET')
 if not APP_ID or not APP_SECRET:
-    print("❌ FEISHU_APP_ID / FEISHU_APP_SECRET not set in ~/.hermes/.env")
+    print("❌ FEISHU_APP_ID / FEISHU_APP_SECRET not set")
     sys.exit(1)
 
 tok = json.dumps({"app_id": APP_ID, "app_secret": APP_SECRET}).encode('utf-8')

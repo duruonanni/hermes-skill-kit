@@ -19,7 +19,7 @@ The document `token` is the same as `document_id` returned by create.
 import json, os, http.client
 
 # === Auth ===
-env_path = os.path.expanduser('~/.hermes/.env')
+env_path = os.path.expanduser(os.environ.get('HERMES_HOME', '~/.hermes') + '/.env')
 def read_env(k):
     with open(env_path) as f:
         for line in f:

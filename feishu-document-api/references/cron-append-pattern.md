@@ -10,7 +10,8 @@ When running as a cron job, `execute_code` is blocked (no user present to approv
 # ~/.hermes/scripts/write_daily_tips.py
 import json, os, urllib.request, sys
 
-with open(os.path.expanduser('~/.hermes/.env')) as f:
+hermes_home = os.environ.get('HERMES_HOME', os.path.expanduser('~/.hermes'))
+with open(os.path.join(hermes_home, '.env')) as f:
     env = dict(line.strip().split('=', 1) for line in f if '=' in line and not line.startswith('#'))
 
 app_id = env.get('FEISHU_APP_ID')
@@ -70,7 +71,7 @@ print(f"DONE:https://bytedance.feishu.cn/docx/{doc_id}")
 ### 2. Run via terminal (with proxy if in China)
 
 ```bash
-ALL_PROXY=http://127.0.0.1:7890 python3 /home/duruo/.hermes/scripts/write_daily_tips.py
+ALL_PROXY=${ALL_PROXY:-http://proxy:7890} python3 \$HERMES_HOME/scripts/write_daily_tips.py
 ```
 
 ### 3. Verify by reading raw content

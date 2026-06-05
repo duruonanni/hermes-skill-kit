@@ -28,7 +28,7 @@ Merged from: `productivity/feishu-api` (v1.0.0)
 
 ## Prerequisites
 
-- `FEISHU_APP_ID` and `FEISHU_APP_SECRET` in `~/.hermes/.env`
+- `FEISHU_APP_ID` and `FEISHU_APP_SECRET` in `$HERMES_HOME/.env` (defaults to `~/.hermes/.env`)
 - The Feishu app must have the `docx:document` permission enabled in [飞书开放平台](https://open.feishu.cn/app) → 权限管理 → 添加 `docx:document`. 添加后需要发布新版本才能生效.
 
 ## Workflow
@@ -41,7 +41,7 @@ Two equivalent approaches:
 ```python
 import json, os, http.client
 
-env_path = os.path.expanduser('~/.hermes/.env')
+env_path = os.path.expanduser(os.environ.get('HERMES_HOME', '~/.hermes') + '/.env')
 def read_env(k):
     with open(env_path) as f:
         for line in f:
@@ -262,7 +262,7 @@ This skill was evaluated by Codex (GPT 5.5 source-level audit) on 2026-06-05 and
 | 3 | **False "success" on API error** (`create_structured_doc.py`) | Track actual success count; `write_blocks_in_order` returns `(total_written, errors)` tuple | `create_structured_doc.py` |
 | 4 | **URL printed before ownership transfer** (both scripts) | `create_structured_doc.py`: print URL **after** transfer success or not at all. `create_doc.py`: no transfer needed (app-owned) | Both scripts |
 | 5 | **Transfer failure leaves orphan doc** (`create_structured_doc.py`) | DELETE doc on transfer failure; print manual cleanup hint if DELETE also fails | `create_structured_doc.py` |
-| 6 | **Hardcoded `~/.hermes/.env`** | `HERMES_HOME` env var with `~/.hermes` fallback | Both scripts |
+| 6 | **Hardcoded `.env` path** | `HERMES_HOME` env var with `~/.hermes` fallback | Both scripts |
 | 7 | **Hardcoded `bytedance.feishu.cn`** | Configurable `TENANT` parameter (3rd CL argument), default `bytedance` | Both scripts |
 | 8 | **No auth response validation** (`create_doc.py:53`) | `.get('tenant_access_token')` returns None silently on API failure → proceeds with `Bearer None` and 401. Still unfixed — needs `code == 0` check before proceeding. | `create_doc.py` |
 | 9 | **No create-doc response validation** (`create_doc.py:67`) | `['data']['document']` crashes on API error with KeyError. Still unfixed — needs `code == 0` check before indexing. | `create_doc.py` |
