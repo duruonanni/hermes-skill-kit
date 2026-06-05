@@ -310,7 +310,7 @@ wc -c ~/.hermes/memories/MEMORY.md ~/.hermes/memories/USER.md
 
 Check configured limits:
 ```bash
-grep -A3 'memory_char_limit\\|user_char_limit' ~/.hermes/config.yaml
+hermes config show memory
 ```
 
 **Quality audit** — score each entry (0-4) for hallucination risk using the GATE criteria (see Hallucination Prevention section):
@@ -346,20 +346,19 @@ Alert if < 4 weeks remaining — the file will hit capacity before the next mont
 The default built-in limits are conservative (2200/1375 chars). If the user has many preferences and environment facts, expand:
 
 ```bash
-# Config is protected (Hermes guards write_file/patch to config.yaml) — use sed via terminal
-sed -i 's/  user_char_limit: 2500/  user_char_limit: 3000/' ~/.hermes/config.yaml
-sed -i 's/  memory_char_limit: 5000/  memory_char_limit: 7000/' ~/.hermes/config.yaml
-# Verify with grep
-grep -E 'user_char_limit|memory_char_limit' ~/.hermes/config.yaml
+# Use hermes config set (safe, validated)
+hermes config set memory.memory_char_limit 7000
+hermes config set memory.user_char_limit 3000
+# Verify
+hermes config show memory
 ```
 
-**Why sed instead of python3 -c with yaml:** The config file is protected by Hermes's file-guard system. `write_file` and `patch` tools are denied with "Write denied: protected system/credential file". The `sed -i` terminal command bypasses this. After editing, verify the YAML indentation is intact.
+**Why hermes config set instead of sed -i:** The Hermes `config set` command validates the key name, indentation, and value type. Direct `sed -i` can corrupt config.yaml if the whitespace doesn't match. Use the CLI tool whenever possible.
 
-**If the `sed` approach doesn't match the exact whitespace** (e.g., indentation differs), first check the current format:
+**If `hermes config set` doesn't support the key name**, check the available keys with:
 ```bash
-grep -n 'user_char_limit\|memory_char_limit' ~/.hermes/config.yaml
+hermes config show memory
 ```
-Then craft the `sed` expression with the exact line content.
 
 **Rule of thumb:** 5000 chars ≈ 1300 tokens. Even at 5000, memory contributes less than 2% of a typical session's prompt — negligible cost.
 
@@ -455,7 +454,7 @@ Running memory maintenance involves deleting and rewriting user-generated conten
 2. **`rm ~/.hermes/memories/USER.md` is the LAST resort** — only use when the memory tool is in permanent drift rejection. The drift recovery section above has exact steps.
 3. **Never delete without reading the .bak first** — the internal store may NOT hold the old content. Always extract entries from `.bak` before deleting the drift file.
 4. **Test with a probe write** — after recovery, run `memory(action='add', target='user', content='probe')` and verify it returns `"success": true` before continuing production work.
-5. **Config edits via `sed -i` are irreversible** — double-check the grep output before running sed. A typo in the sed pattern can corrupt config.yaml.
+5. **Config changes should use `hermes config set`** — it validates the key name and value type. Avoid `sed -i` on config files; a typo in the pattern can corrupt config.yaml.
 
 **⚠️ "Memory 和 Profile 混乱"陷阱 — 最常见的写入错误：**
 
