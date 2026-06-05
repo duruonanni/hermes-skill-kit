@@ -28,8 +28,7 @@ Merged from: `productivity/feishu-api` (v1.0.0)
 
 ## Prerequisites
 
-- `FEISHU_APP_ID` and `FEISHU_APP_SECRET` in `$HERMES_HOME/.env` (defaults to `~/.hermes/.env`)
-- The Feishu app must have the `docx:document` permission enabled in [飞书开放平台](https://open.feishu.cn/app) → 权限管理 → 添加 `docx:document`. 添加后需要发布新版本才能生效.
+The Feishu app must have the `docx:document` permission enabled in [飞书开放平台](https://open.feishu.cn/app) → 权限管理 → 添加 `docx:document`. 添加后需要发布新版本才能生效.
 
 ## Workflow
 
@@ -587,11 +586,8 @@ with open(os.path.expanduser(os.environ.get('HERMES_HOME', '~/.hermes') + '/.env
             k, v = line.split('=', 1)
             env[k] = v
 
-app_id = env['FEISHU_APP_ID']
-app_secret = env['FEISHU_APP_SECRET']
-
-# Get tenant_access_token (valid ~2h)
-tok_data = json.dumps({'app_id': app_id, 'app_secret': app_secret}).encode()
+cred = env.get('FEISHU_APP_SECRET', '')
+tok_data = json.dumps({'app_id': env.get('FEISHU_APP_ID', ''), 'app_secret': cred}).encode()
 req = urllib.request.Request(
     'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
     data=tok_data, headers={'Content-Type': 'application/json'})
