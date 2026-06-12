@@ -5,19 +5,18 @@ Two community-vetted skills for [Hermes Agent](https://hermes-agent.nousresearch
 | Skill | Description | Codex Score | Status |
 |-------|-------------|:-----------:|:------:|
 | **feishu-document-api** | Create, write, and manage Feishu/Lark documents programmatically via the Open API | **8/10** | ✅ Hub-ready |
+| **feishu-response-format** | Standardized Feishu/Lark response formatting: message types, pipe tables vs interactive cards, Markdown compatibility, MEDIA attachments, Card JSON 2.0 table component | **8/10** | ✅ Hub-ready |
 | **hermes-memory-maintenance** | Maintain MEMORY.md/USER.md: audit redundancy, GATE rules, quality scoring, drift recovery | **9/10** | ✅ Hub-ready |
 
-Both skills were audited by Codex (GPT 5.5) source-level review and fixed per its findings before submission.
+All skills were audited by Codex (GPT 5.5) source-level review (+ Claude Code review for feishu-response-format) and fixed per findings before submission.
 
 ## Installation
 
 ```bash
 # Install directly from this repo
-hermes skills install https://github.com/duruonanni/hermes-community-skills/tree/main/feishu-document-api
-hermes skills install https://github.com/duruonanni/hermes-community-skills/tree/main/hermes-memory-maintenance
-
-# Or use individual skill repos (once created)
-hermes skills install https://github.com/<user>/feishu-document-api
+hermes skills install https://github.com/duruonanni/hermes-skill-kit/tree/main/feishu-document-api
+hermes skills install https://github.com/duruonanni/hermes-skill-kit/tree/main/feishu-response-format
+hermes skills install https://github.com/duruonanni/hermes-skill-kit/tree/main/hermes-memory-maintenance
 ```
 
 ## Skills
@@ -36,6 +35,21 @@ Programmatic Feishu/Lark document creation via the Open API. Covers:
 
 **Scripts:** `scripts/create_doc.py` (simple), `scripts/create_structured_doc.py` (full workflow)
 **References:** 5 docs covering ownership transfer, in-place sync, table discovery, cron patterns, markdown conversion
+
+### feishu-response-format
+
+Standardized Feishu/Lark response formatting. Covers:
+- Message type selection guide (`text` / `post` / `interactive` / `MEDIA:`)
+- 3 table schemes: pipe tables (🥇 default), interactive cards (Column Set), Card JSON 2.0 Table component (🆕)
+- Markdown compatibility matrix (what works and what doesn't on Feishu)
+- MEDIA attachment conventions (absolute path rules)
+- P0/P1/P2 graded pitfalls ("一表毁所有", Token expiry, security scanner bypass)
+- Output checklist for quality assurance
+- 53 unit tests for all pure functions
+
+**Scripts:** `templates/send_card.py` — interactive card sender with full type hints, HTTP 429 retry, stdin secret pipe
+**Templates:** `templates/reply_templates.md` — multi-step, verification loop, before/after, research summary
+**References:** 7 docs covering msg types, API call patterns, Markdown support, pipe table alignment, troubleshooting
 
 ### hermes-memory-maintenance
 

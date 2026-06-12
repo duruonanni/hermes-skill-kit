@@ -1,0 +1,63 @@
+{
+  "description": "Feishu interactive card template using column_set for table-like layouts",
+  "type": "msg_type=interactive",
+  "constraints": {
+    "max_columns_per_set": 5,
+    "max_rows": "Unlimited (practical: 20+)",
+    "markdown_in_cells": true,
+    "links_in_cells": true,
+    "emoji_in_cells": true,
+    "background_style": "default | grey"
+  },
+  "templates": {
+    "simple_2col": {
+      "header_title": "当前全貌",
+      "header_template": "blue",
+      "columns": ["渠道", "状态"],
+      "widths": [1, 2],
+      "rows": [
+        ["GitHub repo", "✅ [Link](https://github.com/...)"],
+        ["Service A", "✅ 运行中"],
+        ["Service B", "⏳ 待检查"]
+      ]
+    },
+    "comparison_3col": {
+      "header_title": "优化前后对比",
+      "header_template": "green",
+      "columns": ["指标", "优化前", "优化后"],
+      "widths": [1, 1, 1],
+      "rows": [
+        ["响应速度", "3.0s", "**0.5s** 🚀"],
+        ["内存占用", "2 GB", "**512 MB** ✅"],
+        ["QPS峰值", "200", "**1200** 📈"]
+      ]
+    },
+    "report_4col": {
+      "header_title": "系统巡检报告",
+      "header_template": "indigo",
+      "sections": [
+        {
+          "title": "**■ 服务状态**",
+          "columns": ["服务名称", "状态", "运行时长", "备注"],
+          "widths": [2, 1, 1, 1],
+          "rows": [
+            ["hermes-gateway", "✅ 运行中", "72h 15m", "端口 8080"],
+            ["mihomo-proxy", "✅ 运行中", "168h 0m", "端口 7890"],
+            ["xiaohongshu-mcp", "⏹️ 已停止", "0h 0m", "Docker 容器"]
+          ]
+        },
+        {
+          "title": "**■ 资源占用**",
+          "columns": ["资源", "已用", "总量", "使用率"],
+          "widths": [1, 1, 1, 1],
+          "rows": [
+            ["CPU", "12%", "8 核", "🟢 正常"],
+            ["内存", "3.2 GB", "16 GB", "🟢 正常"],
+            ["磁盘", "234 GB", "512 GB", "🟡 45.7%"]
+          ]
+        }
+      ],
+      "summary": "**总计**: 3/4 服务正常运行 · 磁盘空间充足"
+    }
+  }
+}
